@@ -6,10 +6,12 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     currCity: '臺北市',
-    currDistrict: '北投區',
+    currDistrict: '大安區',
     location: [],
     stores: [],
     keywords: '',
+    showModal: false,
+    infoBoxSid: null,
   },
   mutations: {
     setcurrCity(state, payload) {
@@ -26,6 +28,12 @@ export default new Vuex.Store({
     },
     setKeywords(state, payload) {
       state.keywords = payload;
+    },
+    setshowModal(state, payload) {
+      state.showModal = payload;
+    },
+    setInfoBoxSid(state, payload) {
+      state.infoBoxSid = payload;
     },
   },
   actions: {

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 <template>
   <div class="aside-menu">
     <div class="wraps">
@@ -18,12 +19,12 @@
     <div class="wraps">
       <label>
         <i class="fas fa-search-location"></i> 關鍵字搜尋：
-        <input type="text" placeholder="請輸入關鍵字" v-model="keywords">
+        <input type="text" placeholder="請輸入關鍵字" v-model="keywords" />
       </label>
     </div>
     <ul class="store-lists">
       <li class="store-info wraps" v-for="s in filteredStores" :key="s.id">
-        <h1>{{ s.name }}</h1>
+        <h1 v-html="keywordHighlight(s.name)"></h1>
 
         <div class="mask-info">
           <i class="fas fa-head-side-mask"></i>
@@ -37,7 +38,7 @@
 
         <div class="mask-info">最後更新時間: {{ s.updated }}</div>
 
-        <button class="btn-store-detail">
+        <button class="btn-store-detail" @click="openInfoBox(s.id)">
           <i class="fas fa-info-circle"></i>
           詳細資訊
         </button>
@@ -49,7 +50,21 @@
 <script>
 export default {
   name: 'asideMenu',
+  watch: {
+    districtList(v) {
+      const [arr] = v;
+      this.currDistrict = arr.name;
+    },
+  },
   computed: {
+    showModal: {
+      get() {
+        return this.$store.state.showModal;
+      },
+      set(value) {
+        this.$store.commit('setshowModal', value);
+      },
+    },
     keywords: {
       get() {
         return this.$store.state.keywords;
@@ -71,7 +86,15 @@ export default {
         return this.$store.state.currDistrict;
       },
       set(value) {
-        this.$store.commit('setcurrDistric', value);
+        this.$store.commit('setcurrDistrict', value);
+      },
+    },
+    infoBoxSid: {
+      get() {
+        return this.$store.state.infoBoxSid;
+      },
+      set(value) {
+        this.$store.commit('setInfoBoxSid', value);
       },
     },
     cityList() {
@@ -81,14 +104,24 @@ export default {
       return this.$store.getters.districtList;
     },
     filteredStores() {
-      return this.$store.state.stores;
+      return this.$store.getters.filteredStores;
     },
-    watch: {
-      districtList(v) {
-        const [arr] = v;
-        this.currDistrict = arr.name;
-      },
+  },
+  methods: {
+    keywordHighlight(val) {
+      return val.replace(new RegExp(this.keywords, 'g'), `<span class="highlight">${this.keywords}</span>`);
+    },
+    openInfoBox(sid) { // 家入參數
+      this.showModal = true;
+      this.infoBoxSid = sid; // 新增此程式碼
     },
   },
 };
 </script>
+
+
+<style>
+.highlight {
+  color: #f08d49;
+}
+</style>
