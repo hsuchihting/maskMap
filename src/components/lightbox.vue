@@ -3,9 +3,8 @@
     <div class="modal-mask" v-show="showModal">
       <div class="modal-wrapper">
         <div class="modal-container">
-          <div class="modal-body">
-            <div class="modal-body">
-              <h1 class="store-name">藥局名稱</h1>
+            <div class="modal-body" v-if="currStore">
+              <h1 class="store-name">{{ currStore.name }}</h1>
               <hr />
               <h2 class="title">營業時間</h2>
               <table>
@@ -24,45 +23,26 @@
                 <tbody>
                   <tr>
                     <th>早上</th>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td v-for="(s, idx) in servicePeriods[0]" :key="idx">{{s}}</td>
                   </tr>
                   <tr>
                     <th>中午</th>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td v-for="(s, idx) in servicePeriods[1]" :key="idx">{{s}}</td>
                   </tr>
                   <tr>
                     <th>晚上</th>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td v-for="(s, idx) in servicePeriods[2]" :key="idx">{{s}}</td>
                   </tr>
                 </tbody>
               </table>
-              <h2 class="title">地址 XXXXXXX</h2>
-              <h2 class="title">電話 XXXXXXX</h2>
-              <h2 class="title">備註 XXXXXXX</h2>
+              <h2 class="title">地址: {{ currStore.address }}</h2>
+              <h2 class="title">電話: {{ currStore.phone }}</h2>
+              <h2 v-if="currStore.custom_note" class="title">備註: {{ currStore.custom_note }}</h2>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </transition>
+    </transition>
 </template>
 
 
@@ -89,13 +69,16 @@ export default {
     currStore() {
       return this.$store.state.stores.filter((d) => d.id === this.infoBoxSid)[0];
     },
+
     servicePeriods() {
       let servicePeriods = this?.currStore?.['service_periods'] || '';
       servicePeriods = servicePeriods.replace(/N/g, 'O').replace(/Y/g, 'X');
       return servicePeriods
-        ? [servicePeriods.slice(0, 7).split(''),
+        ? [
+          servicePeriods.slice(0, 7).split(''),
           servicePeriods.slice(7, 14).split(''),
-          servicePeriods.slice(14, 21).split('')]
+          servicePeriods.slice(14, 21).split(''),
+        ]
         : servicePeriods;
     },
   },

@@ -111,7 +111,7 @@ export default {
     keywordHighlight(val) {
       return val.replace(new RegExp(this.keywords, 'g'), `<span class="highlight">${this.keywords}</span>`);
     },
-    openInfoBox(sid) { // 家入參數
+    openInfoBox(sid) { // 加入參數
       this.showModal = true;
       this.infoBoxSid = sid; // 新增此程式碼
     },
